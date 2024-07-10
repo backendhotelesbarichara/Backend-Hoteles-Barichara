@@ -18,7 +18,7 @@ router.post(
     check("telefono", "Digite el telefono").not().isEmpty(),
     validarCampos,
   ],
-  httpHotel.resgistroHotel
+  httpHotel.crearHotel
 );
 
 //Put

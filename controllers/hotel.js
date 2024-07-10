@@ -12,20 +12,20 @@ const httpHotel = {
   },
 
   //Post registro proyecto
-  resgistroHotel: async (req, res) => {
+  crearHotel: async (req, res) => {
     try {
-      const { nombre, descripcion, direccion, telefono  } = req.body;
+      const { nombre, descripcion, direccion, telefono } = req.body;
 
       const hotel = new Hotel({
         nombre,
         descripcion,
         direccion,
-        telefono
+        telefono,
       });
 
       await hotel.save();
 
-      const HotelBusca = await Hotel.findById(hotel._id)
+      const HotelBusca = await Hotel.findById(hotel._id);
 
       res.json(HotelBusca);
     } catch (error) {
@@ -36,18 +36,18 @@ const httpHotel = {
   editarHotel: async (req, res) => {
     try {
       const { id } = req.params;
-      const { nombre, descripcion, direccion, telefono  } = req.body;
+      const { nombre, descripcion, direccion, telefono } = req.body;
 
       const hotel = await Hotel.findByIdAndUpdate(
         id,
         {
-            nombre,
-            descripcion,
-            direccion,
-            telefono,
+          nombre,
+          descripcion,
+          direccion,
+          telefono,
         },
         { new: true }
-      )
+      );
 
       res.json(hotel);
     } catch (error) {
