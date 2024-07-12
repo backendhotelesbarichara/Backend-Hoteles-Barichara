@@ -6,7 +6,9 @@ const hotelSchema = new mongoose.Schema({
   imagen: { url: { type: String }, publicId: { type: String } },
   logo: { url: { type: String }, publicId: { type: String } },
   direccion: { type: String, require: true, unique: true },
+  correo: { type: String, required: true, unique: true },
   telefono: { type: String, required: true, unique: true },
+  pisos: { type: String, required: true,},
   estado: { type: Boolean, default: 1 },
   createAT: { type: Date, default: Date.now },
 });

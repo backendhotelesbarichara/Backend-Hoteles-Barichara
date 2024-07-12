@@ -2,14 +2,22 @@ import Reserva from "../models/reserva.js";
 
 const httpReserva = {
   //Get all reservas
-  getAll: async (req, res) => {
+  getTodo: async (req, res) => {
     try {
       const reservas = await Reserva.find()
-        .populate("idHabitacion")
-        .populate("idHuesped");
+        .populate({
+          path: "idHabitacion",
+          populate: {
+            path: "idPiso",
+            populate: {
+              path: "idHotel",
+            },
+          },
+        }).populate("idCliente");
       res.json(reservas);
     } catch (error) {
       res.status(500).json({ error });
+      console.log(error)
     }
   },
 
@@ -19,7 +27,7 @@ const httpReserva = {
       const { id } = req.params;
       const reserva = await Reserva.findById(id)
         .populate("idHabitacion")
-        .populate("idHuesped");
+        .populate("idCliente");
       if (!reserva) {
         res.status(404).json({ message: "Reserva no encontrada" });
       } else {
@@ -37,18 +45,22 @@ const httpReserva = {
         fecha_entrada,
         fecha_salida,
         cantidad_dias,
+        cantidad_adulto,
+        cantidad_nino,
         costo_total,
         idHabitacion,
-        idHuesped,
+        idCliente,
       } = req.body;
 
       const reserva = new Reserva({
         fecha_entrada,
         fecha_salida,
         cantidad_dias,
+        cantidad_adulto,
+        cantidad_nino,
         costo_total,
         idHabitacion,
-        idHuesped,
+        idCliente,
       });
 
       await reserva.save();
@@ -67,9 +79,12 @@ const httpReserva = {
         fecha_entrada,
         fecha_salida,
         cantidad_dias,
+        cantidad_adulto,
+        cantidad_nino,
+        edad_nino,
         costo_total,
         idHabitacion,
-        idHuesped,
+        idCliente,
       } = req.body;
 
       const reserva = await Reserva.findByIdAndUpdate(
@@ -78,9 +93,12 @@ const httpReserva = {
           fecha_entrada,
           fecha_salida,
           cantidad_dias,
+          cantidad_adulto,
+          cantidad_nino,
+          edad_nino,
           costo_total,
           idHabitacion,
-          idHuesped,
+          idCliente,
         },
         { new: true }
       );

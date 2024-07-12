@@ -8,16 +8,18 @@ const router = new Router();
 //Get
 router.get("/all", httpHabitacion.getTodo);
 
+router.get("/buscarPiso/:idPiso", httpHabitacion.getPorPiso);
+
 //Post
 router.post(
   "/registro",
   [
     check("numero_habitacion", "Digite el número de habitación").not().isEmpty(),
     check("descripcion", "Digite la descripción").not().isEmpty(),
-    check("tipo_habitacion", "Digite el tipo de habitación").not().isEmpty(),
+    check("cantidad_personas", "Digite el máximo de personas").not().isEmpty(),
     check("servicio", "Digite el servicio").not().isEmpty(),
     check("precio_noche", "Digite el precio por noche").not().isEmpty(),
-    check("idHotel", "Ingrese un ID válido").isMongoId(),
+    check("idPiso", "Ingrese un ID válido").isMongoId(),
     validarCampos,
   ],
   httpHabitacion.crearHabitacion
@@ -29,10 +31,10 @@ router.put(
   [
     check("numero_habitacion", "Digite el número de habitación").not().isEmpty(),
     check("descripcion", "Digite la descripción").not().isEmpty(),
-    check("tipo_habitacion", "Digite el tipo de habitación").not().isEmpty(),
+    check("cantidad_personas", "Digite el máximo de personas").not().isEmpty(),
     check("servicio", "Digite el servicio").not().isEmpty(),
     check("precio_noche", "Digite el precio por noche").not().isEmpty(),
-    check("idHotel", "Ingrese un ID válido").isMongoId(),
+    check("idPiso", "Ingrese un ID válido").isMongoId(),
     validarCampos,
   ],
   httpHabitacion.editarHabitacion

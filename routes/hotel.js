@@ -15,7 +15,9 @@ router.post(
     check("nombre", "Digite el nombre").not().isEmpty(),
     check("descripcion", "Digite la descripción").not().isEmpty(),
     check("direccion", "Digite la direccion").not().isEmpty(),
+    check("correo", "Digite el correo").not().isEmpty(),
     check("telefono", "Digite el telefono").not().isEmpty(),
+    check("pisos", "Digite la cantidad de pisos").not().isEmpty(),
     validarCampos,
   ],
   httpHotel.crearHotel
@@ -29,7 +31,9 @@ router.put(
     check("nombre", "Digite el nombre").not().isEmpty(),
     check("descripcion", "Digite la descripción").not().isEmpty(),
     check("direccion", "Digite la direccion").not().isEmpty(),
+    check("correo", "Digite el correo").not().isEmpty(),
     check("telefono", "Digite el telefono").not().isEmpty(),
+    check("pisos", "Digite la cantidad de pisos").not().isEmpty(),
     validarCampos,
   ],
   httpHotel.editarHotel

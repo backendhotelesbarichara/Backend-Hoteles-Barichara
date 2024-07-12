@@ -1,10 +1,11 @@
+import habitacion from "../models/habitacion.js";
 import Habitacion from "../models/habitacion.js";
 
 const httpHabitacion = {
   //Get
   getTodo: async (req, res) => {
     try {
-      const habitaciones = await Habitacion.find().populate("idHotel");
+      const habitaciones = await Habitacion.find().populate("idPiso");
       res.json(habitaciones);
     } catch (error) {
       res.status(500).json({ error });
@@ -15,7 +16,7 @@ const httpHabitacion = {
   getById: async (req, res) => {
     try {
       const { id } = req.params;
-      const habitacion = await Habitacion.findById(id).populate("idHotel");
+      const habitacion = await Habitacion.findById(id).populate("idPiso");
       if (!habitacion) {
         res.status(404).json({ message: "Habitación no encontrada" });
       } else {
@@ -26,6 +27,17 @@ const httpHabitacion = {
     }
   },
 
+  getPorPiso: async (req, res) => {
+    try {
+      const { idPiso } = req.params;
+      const habitacion = await Habitacion.find({ idPiso }).populate("idPiso");
+      res.json(habitacion);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  },
+
   //Post registro habitación
   crearHabitacion: async (req, res) => {
     try {
@@ -33,18 +45,20 @@ const httpHabitacion = {
         numero_habitacion,
         descripcion,
         tipo_habitacion,
+        cantidad_personas,
         servicio,
         precio_noche,
-        idHotel,
+        idPiso,
       } = req.body;
 
       const habitacion = new Habitacion({
         numero_habitacion,
         descripcion,
         tipo_habitacion,
+        cantidad_personas,
         servicio,
         precio_noche,
-        idHotel,
+        idPiso,
       });
 
       await habitacion.save();
@@ -65,7 +79,8 @@ const httpHabitacion = {
         tipo_habitacion,
         servicio,
         precio_noche,
-        idHotel,
+        idPiso,
+        disponible,
       } = req.body;
 
       const habitacion = await Habitacion.findByIdAndUpdate(
@@ -76,7 +91,8 @@ const httpHabitacion = {
           tipo_habitacion,
           servicio,
           precio_noche,
-          idHotel,
+          idPiso,
+          disponible,
         },
         { new: true }
       );

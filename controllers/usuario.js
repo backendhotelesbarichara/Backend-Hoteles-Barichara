@@ -1,9 +1,10 @@
 import bcryptjs from "bcryptjs";
 import Usuario from "../models/usuario.js";
+import helpersGeneral from "../helpers/generales.js"
 
 const httpUsuario = {
   //Get all usuarios
-  getAll: async (req, res) => {
+  getTodo: async (req, res) => {
     try {
       const usuarios = await Usuario.find();
       res.json(usuarios);
@@ -30,18 +31,22 @@ const httpUsuario = {
   //Post crear usuario
   crearUsuario: async (req, res) => {
     try {
-      const { nombre, apellido, cedula, rol, correo, telefono, password } = req.body;
+      const { nombre, apellido, cedula, rol, correo, telefono, password } =
+        req.body;
 
       const mayusNombre = await helpersGeneral.mayusAllPalabras(nombre.trim());
+      const mayusApellido = await helpersGeneral.mayusAllPalabras(apellido.trim());
+      
       const usuario = new Usuario({
         nombre: mayusNombre,
-        apellido, 
-        cedula, 
+        apellido: mayusApellido,
+        cedula,
         rol,
         correo,
         telefono,
         password,
       });
+
       const salt = bcryptjs.genSaltSync();
       usuario.password = bcryptjs.hashSync(password, salt);
 
@@ -50,6 +55,7 @@ const httpUsuario = {
       res.json(usuario);
     } catch (error) {
       res.status(500).json({ error });
+      console.log(error)
     }
   },
 
@@ -59,11 +65,14 @@ const httpUsuario = {
       const { id } = req.params;
       const { nombre, apellido, cedula, rol, correo, telefono } = req.body;
 
+      const mayusNombre = await helpersGeneral.mayusAllPalabras(nombre.trim());
+      const mayusApellido = await helpersGeneral.mayusAllPalabras(apellido.trim());
+
       const usuario = await Usuario.findByIdAndUpdate(
         id,
         {
-          nombre,
-          apellido,
+          nombre: mayusNombre,
+          apellido: mayusApellido,
           cedula,
           rol,
           correo,

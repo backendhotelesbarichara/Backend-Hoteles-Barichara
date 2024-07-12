@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const huespedSchema = new mongoose.Schema({
+const clienteSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
   apellido: { type: String, required: true },
   cedula: { type: String, required: true, unique: true },
@@ -9,4 +9,4 @@ const huespedSchema = new mongoose.Schema({
   createAT: { type: Date, default: Date.now },
 });
 
-export default mongoose.model("Huesped", huespedSchema);
+export default mongoose.model("Cliente", clienteSchema);

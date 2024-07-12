@@ -6,7 +6,7 @@ import validarCampos from "../middlewares/validar.js";
 const router = new Router();
 
 //Get
-router.get("/all", httpReserva.getAll);
+router.get("/all", httpReserva.getTodo);
 
 //Get by ID
 router.get("/:id", httpReserva.getById);
@@ -19,8 +19,9 @@ router.post(
     check("fecha_salida", "Digite la fecha de salida").not().isEmpty(),
     check("cantidad_dias", "Digite la cantidad de días").not().isEmpty(),
     check("costo_total", "Digite el costo total").not().isEmpty(),
+    check("cantidad_adulto", "Digite cantidad adulto").not().isEmpty(),
     check("idHabitacion", "Digite el ID de la habitación").isMongoId(),
-    check("idHuesped", "Digite el ID del huesped").isMongoId(),
+    check("idCliente", "Digite el ID del huesped").isMongoId(),
     validarCampos,
   ],
   httpReserva.crearReserva
@@ -34,8 +35,9 @@ router.put(
     check("fecha_salida", "Digite la fecha de salida").not().isEmpty(),
     check("cantidad_dias", "Digite la cantidad de días").not().isEmpty(),
     check("costo_total", "Digite el costo total").not().isEmpty(),
+    check("cantidad_adulto", "Digite cantidad adulto").not().isEmpty(),
     check("idHabitacion", "Digite el ID de la habitación").isMongoId(),
-    check("idHuesped", "Digite el ID del huesped").isMongoId(),
+    check("idCliente", "Digite el ID del huesped").isMongoId(),
     validarCampos,
   ],
   httpReserva.editarReserva

@@ -1,12 +1,12 @@
 import { Router } from "express";
-import httpHuesped from "../controllers/huesped.js";
+import httpCliente from "../controllers/cliente.js";
 import { check } from "express-validator";
 import validarCampos from "../middlewares/validar.js";
 
 const router = new Router();
 
 //Get
-router.get("/all", httpHuesped.getTodo);
+router.get("/all", httpCliente.getTodo);
 
 //Post
 router.post(
@@ -18,7 +18,7 @@ router.post(
     check("telefono", "Digite el telefono").not().isEmpty(),
     validarCampos,
   ],
-  httpHuesped.crearHuesped
+  httpCliente.crearCliente
 );
 
 //Put
@@ -31,7 +31,7 @@ router.put(
     check("telefono", "Digite el telefono").not().isEmpty(),
     validarCampos,
   ],
-  httpHuesped.editarHuesped
+  httpCliente.editarCliente
 );
 
 router.put(
@@ -41,7 +41,7 @@ router.put(
     check("id", "Ingrese un ID válido").isMongoId(),
     validarCampos,
   ],
-  httpHuesped.putInactivar
+  httpCliente.putInactivar
 );
 
 router.put(
@@ -51,7 +51,7 @@ router.put(
     check("id", "Ingrese un ID válido").isMongoId(),
     validarCampos,
   ],
-  httpHuesped.putActivar
+  httpCliente.putActivar
 );
 
 export default router;

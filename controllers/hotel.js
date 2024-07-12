@@ -1,4 +1,5 @@
 import Hotel from "../models/hotel.js";
+import Piso from "../models/piso.js";
 
 const httpHotel = {
   //Get
@@ -14,18 +15,29 @@ const httpHotel = {
   //Post registro proyecto
   crearHotel: async (req, res) => {
     try {
-      const { nombre, descripcion, direccion, telefono } = req.body;
+      const { nombre, descripcion, correo, direccion, telefono, pisos } =
+        req.body;
 
       const hotel = new Hotel({
         nombre,
         descripcion,
+        correo,
         direccion,
         telefono,
+        pisos,
       });
 
       await hotel.save();
 
-      const HotelBusca = await Hotel.findById(hotel._id);
+      for (let i = 1; i <= pisos; i++) {
+        const piso = new Piso({
+          num_piso: i,
+          idHotel: hotel._id,
+        });
+        await piso.save();
+      }
+
+      const HotelBusca = await Hotel.findById(hotel._id).populate("pisos");
 
       res.json(HotelBusca);
     } catch (error) {
@@ -36,7 +48,8 @@ const httpHotel = {
   editarHotel: async (req, res) => {
     try {
       const { id } = req.params;
-      const { nombre, descripcion, direccion, telefono } = req.body;
+      const { nombre, descripcion, correo, direccion, telefono, pisos } =
+        req.body;
 
       const hotel = await Hotel.findByIdAndUpdate(
         id,
@@ -44,7 +57,9 @@ const httpHotel = {
           nombre,
           descripcion,
           direccion,
+          correo,
           telefono,
+          pisos,
         },
         { new: true }
       );

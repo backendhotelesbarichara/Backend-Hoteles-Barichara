@@ -1,11 +1,11 @@
-import Huesped from "../models/huesped.js";
+import Cliente from "../models/cliente.js";
 
-const httpHuesped = {
+const httpCliente = {
   //Get
   getTodo: async (req, res) => {
     try {
-      const huespedes = await Huesped.find();
-      res.json(huespedes);
+      const cliente = await Cliente.find();
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error });
     }
@@ -15,44 +15,44 @@ const httpHuesped = {
   getById: async (req, res) => {
     try {
       const { id } = req.params;
-      const huesped = await Huesped.findById(id);
-      if (!huesped) {
-        res.status(404).json({ message: "Huesped no encontrado" });
+      const cliente = await Cliente.findById(id);
+      if (!cliente) {
+        res.status(404).json({ message: "Cliente no encontrado" });
       } else {
-        res.json(huesped);
+        res.json(cliente);
       }
     } catch (error) {
       res.status(500).json({ error });
     }
   },
 
-  //Post registro huesped
-  crearHuesped: async (req, res) => {
+  //Post registro cliente
+  crearCliente: async (req, res) => {
     try {
       const { nombre, apellido, cedula, telefono } = req.body;
 
-      const huesped = new Huesped({
+      const cliente = new Cliente({
         nombre,
         apellido,
         cedula,
         telefono,
       });
 
-      await huesped.save();
+      await cliente.save();
 
-      res.json(huesped);
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error });
     }
   },
 
-  //Put editar huesped
-  editarHuesped: async (req, res) => {
+  //Put editar cliente
+  editarCliente: async (req, res) => {
     try {
       const { id } = req.params;
       const { nombre, apellido, cedula, telefono } = req.body;
 
-      const huesped = await Huesped.findByIdAndUpdate(
+      const cliente = await Cliente.findByIdAndUpdate(
         id,
         {
           nombre,
@@ -63,41 +63,41 @@ const httpHuesped = {
         { new: true }
       );
 
-      res.json(huesped);
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error });
     }
   },
 
-  //Put activar huesped
+  //Put activar cliente
   putActivar: async (req, res) => {
     try {
       const { id } = req.params;
-      const huesped = await Huesped.findByIdAndUpdate(
+      const cliente = await Cliente.findByIdAndUpdate(
         id,
         { estado: true },
         { new: true }
       );
-      res.json(huesped);
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error });
     }
   },
 
-  //Put inactivar huesped
+  //Put inactivar cliente
   putInactivar: async (req, res) => {
     try {
       const { id } = req.params;
-      const huesped = await Huesped.findByIdAndUpdate(
+      const cliente = await Cliente.findByIdAndUpdate(
         id,
         { estado: false },
         { new: true }
       );
-      res.json(huesped);
+      res.json(cliente);
     } catch (error) {
       res.status(500).json({ error });
     }
   },
 };
 
-export default httpHuesped;
+export default httpCliente;
