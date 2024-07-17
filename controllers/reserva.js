@@ -1,16 +1,18 @@
 import Reserva from "../models/reserva.js";
-import Habitacion from "../models/habitacion.js"
+import Habitacion from "../models/habitacion.js";
+import dayjs from "dayjs";
 
 const httpReserva = {
   //Get all reservas
   getTodo: async (req, res) => {
     try {
       const reservas = await Reserva.find()
-        .populate("idHabitacion").populate("idCliente");
+        .populate("idHabitacion")
+        .populate("idCliente");
       res.json(reservas);
     } catch (error) {
       res.status(500).json({ error });
-      console.log(error)
+      console.log(error);
     }
   },
 
@@ -18,38 +20,51 @@ const httpReserva = {
     try {
       const HotelId = req.params.idHotel;
       const reservas = await Reserva.find()
-       .populate({
-          path: 'idHabitacion',
+        .populate({
+          path: "idHabitacion",
           populate: {
-            path: 'idPiso',
-            model: 'Piso',
-            match: { idHotel: HotelId }
-          }
+            path: "idPiso",
+            model: "Piso",
+            match: { idHotel: HotelId },
+          },
         })
-       .populate("idCliente");
+        .populate("idCliente");
       res.json(reservas);
     } catch (error) {
       res.status(500).json({ error });
-      console.log(error)
+      console.log(error);
     }
   },
 
   getHabitacionesDisponibles: async (req, res) => {
     try {
       const { fecha_entrada, fecha_salida } = req.params;
-  
+
+      const fechaEntrada = dayjs(fecha_entrada);
+      const fechaSalida = dayjs(fecha_salida);
+
+      // Formatear fechas
+      const fechaEntradaFormateada = fechaEntrada.format("YYYY-MM-DD");
+      const fechaSalidaFormateada = fechaSalida.format("YYYY-MM-DD");
+
       const reservasIds = await Reserva.find({
         $or: [
-          { fecha_entrada: { $lte: fecha_salida }, fecha_salida: { $gte: fecha_entrada } },
-          { fecha_entrada: { $lte: fecha_entrada }, fecha_salida: { $gte: fecha_salida } },
+          {
+            fecha_entrada: { $lte: fechaSalidaFormateada },
+            fecha_salida: { $gte: fechaEntradaFormateada },
+          },
+          {
+            fecha_entrada: { $lte: fechaEntradaFormateada },
+            fecha_salida: { $gte: fechaSalidaFormateada },
+          },
         ],
-      }).select('_id');
-  
+      }).select("_id");
+
       const habitacionesDisponibles = await Habitacion.find({
         disponible: true,
-        _id: { $not: { $in: reservasIds.map(id => id._id) } },
+        _id: { $not: { $in: reservasIds.map((id) => id._id) } },
       });
-  
+
       res.json(habitacionesDisponibles);
     } catch (error) {
       res.status(500).json({ error });
@@ -86,7 +101,7 @@ const httpReserva = {
         idHabitacion,
         idCliente,
       } = req.body;
-  
+
       const reserva = new Reserva({
         fecha_entrada,
         fecha_salida,
@@ -97,12 +112,12 @@ const httpReserva = {
         idHabitacion,
         idCliente,
       });
-  
+
       await reserva.save();
-  
+
       // Actualizar el atributo disponible de la habitación
       await Habitacion.findByIdAndUpdate(idHabitacion, { disponible: false });
-  
+
       res.json(reserva);
     } catch (error) {
       res.status(500).json({ error });
