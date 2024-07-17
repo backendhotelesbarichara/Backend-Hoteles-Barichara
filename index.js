@@ -8,6 +8,7 @@ import Cliente from "./routes/cliente.js";
 import Habitacion from "./routes/habitacion.js";
 import Reserva from "./routes/reserva.js";
 import Usuario from "./routes/usuario.js";
+import Servicio from "./routes/servicio.js"
 
 const app = express();
 const port = process.env.PORT;
@@ -20,6 +21,7 @@ app.use("/api/habitacion", Habitacion);
 app.use("/api/cliente", Cliente);
 app.use("/api/reserva", Reserva);
 app.use("/api/usuario", Usuario);
+app.use("/api/servicio", Servicio);
 
 const server = http.createServer(app);
 

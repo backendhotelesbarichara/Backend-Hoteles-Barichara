@@ -8,8 +8,12 @@ const router = new Router();
 //Get
 router.get("/all", httpReserva.getTodo);
 
-//Get by ID
 router.get("/:id", httpReserva.getById);
+
+router.get("/buscarReservas/:idHotel", httpReserva.getReservasByHotelId);
+
+router.get('/habitaciones-disponibles/:fecha_entrada/:fecha_salida', httpReserva.getHabitacionesDisponibles);
+
 
 //Post
 router.post(
@@ -17,7 +21,7 @@ router.post(
   [
     check("fecha_entrada", "Digite la fecha de entrada").not().isEmpty(),
     check("fecha_salida", "Digite la fecha de salida").not().isEmpty(),
-    check("cantidad_dias", "Digite la cantidad de días").not().isEmpty(),
+    check("cantidad_noches", "Digite la cantidad de noches").not().isEmpty(),
     check("costo_total", "Digite el costo total").not().isEmpty(),
     check("cantidad_adulto", "Digite cantidad adulto").not().isEmpty(),
     check("idHabitacion", "Digite el ID de la habitación").isMongoId(),
@@ -33,7 +37,7 @@ router.put(
   [
     check("fecha_entrada", "Digite la fecha de entrada").not().isEmpty(),
     check("fecha_salida", "Digite la fecha de salida").not().isEmpty(),
-    check("cantidad_dias", "Digite la cantidad de días").not().isEmpty(),
+    check("cantidad_noches", "Digite la cantidad de noches").not().isEmpty(),
     check("costo_total", "Digite el costo total").not().isEmpty(),
     check("cantidad_adulto", "Digite cantidad adulto").not().isEmpty(),
     check("idHabitacion", "Digite el ID de la habitación").isMongoId(),

@@ -9,6 +9,7 @@ const hotelSchema = new mongoose.Schema({
   correo: { type: String, required: true, unique: true },
   telefono: { type: String, required: true, unique: true },
   pisos: { type: String, required: true,},
+  idUsuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
   estado: { type: Boolean, default: 1 },
   createAT: { type: Date, default: Date.now },
 });

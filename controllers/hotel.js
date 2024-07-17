@@ -15,7 +15,7 @@ const httpHotel = {
   //Post registro proyecto
   crearHotel: async (req, res) => {
     try {
-      const { nombre, descripcion, correo, direccion, telefono, pisos } =
+      const { nombre, descripcion, correo, direccion, telefono, pisos, idUsuario } =
         req.body;
 
       const hotel = new Hotel({
@@ -25,6 +25,7 @@ const httpHotel = {
         direccion,
         telefono,
         pisos,
+        idUsuario,
       });
 
       await hotel.save();
@@ -48,7 +49,7 @@ const httpHotel = {
   editarHotel: async (req, res) => {
     try {
       const { id } = req.params;
-      const { nombre, descripcion, correo, direccion, telefono, pisos } =
+      const { nombre, descripcion, correo, direccion, telefono, pisos, idUsuario } =
         req.body;
 
       const hotel = await Hotel.findByIdAndUpdate(
@@ -60,6 +61,7 @@ const httpHotel = {
           correo,
           telefono,
           pisos,
+          idUsuario,
         },
         { new: true }
       );

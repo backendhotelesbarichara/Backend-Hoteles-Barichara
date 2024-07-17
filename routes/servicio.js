@@ -1,12 +1,18 @@
 import { Router } from "express";
-import httpHotel from "../controllers/hotel.js";
+import httpServicio from "../controllers/servicio.js";
 import { check } from "express-validator";
 import validarCampos from "../middlewares/validar.js";
 
 const router = new Router();
 
 //Get
-router.get("/all", httpHotel.getTodo);
+router.get("/all", httpServicio.getTodo);
+
+//Get by ID
+router.get("/:id", httpServicio.getById);
+
+//Get servicios by hotel
+router.get("/hotel/:idHotel", httpServicio.getServiciosByHotel);
 
 //Post
 router.post(
@@ -14,31 +20,24 @@ router.post(
   [
     check("nombre", "Digite el nombre").not().isEmpty(),
     check("descripcion", "Digite la descripción").not().isEmpty(),
-    check("direccion", "Digite la direccion").not().isEmpty(),
-    check("correo", "Digite el correo").not().isEmpty(),
-    check("telefono", "Digite el telefono").not().isEmpty(),
-    check("pisos", "Digite la cantidad de pisos").not().isEmpty(),
-    check("idUsuario", "Digite el usuario").not().isEmpty(),
+    check("idHotel", "Seleccione un hotel").not().isEmpty(),
+    check("idHotel", "Seleccione un hotel").isMongoId(),
     validarCampos,
   ],
-  httpHotel.crearHotel
+  httpServicio.crearServicio
 );
 
 //Put
-
 router.put(
   "/editar/:id",
   [
     check("nombre", "Digite el nombre").not().isEmpty(),
     check("descripcion", "Digite la descripción").not().isEmpty(),
-    check("direccion", "Digite la direccion").not().isEmpty(),
-    check("correo", "Digite el correo").not().isEmpty(),
-    check("telefono", "Digite el telefono").not().isEmpty(),
-    check("pisos", "Digite la cantidad de pisos").not().isEmpty(),
-    check("idUsuario", "Digite el usuario").not().isEmpty(),
+    check("idHotel", "Seleccione un hotel").not().isEmpty(),
+    check("idHotel", "Seleccione un hotel").isMongoId(),
     validarCampos,
   ],
-  httpHotel.editarHotel
+  httpServicio.editarServicio
 );
 
 router.put(
@@ -48,8 +47,9 @@ router.put(
     check("id", "Ingrese un ID válido").isMongoId(),
     validarCampos,
   ],
-  httpHotel.putInactivar
+  httpServicio.putInactivar
 );
+
 router.put(
   "/activar/:id",
   [
@@ -57,7 +57,7 @@ router.put(
     check("id", "Ingrese un ID válido").isMongoId(),
     validarCampos,
   ],
-  httpHotel.putActivar
+  httpServicio.putActivar
 );
 
 export default router;
