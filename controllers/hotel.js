@@ -12,6 +12,17 @@ const httpHotel = {
     }
   },
 
+  getPorUsuario: async (req, res) => {
+    try {
+      const { idUsuario } = req.params;
+      const hotel = await Hotel.find({ idUsuario }).populate("idUsuario");
+      res.json(hotel);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  },
+
   //Post registro proyecto
   crearHotel: async (req, res) => {
     try {

@@ -2,18 +2,22 @@ import express from "express";
 import http from "http";
 import "dotenv/config";
 import mongoose from "mongoose";
+import cors from 'cors';
 import Hotel from "./routes/hotel.js";
 import Piso from "./routes/piso.js";
 import Cliente from "./routes/cliente.js";
 import Habitacion from "./routes/habitacion.js";
 import Reserva from "./routes/reserva.js";
 import Usuario from "./routes/usuario.js";
-import Servicio from "./routes/servicio.js"
+import Servicio from "./routes/servicio.js";
+
 
 const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
+app.use(cors());
+app.use(express.static('public'))
 
 app.use("/api/hotel", Hotel);
 app.use("/api/piso", Piso);

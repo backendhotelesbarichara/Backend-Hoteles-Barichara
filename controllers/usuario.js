@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import Usuario from "../models/usuario.js";
 import helpersGeneral from "../helpers/generales.js"
+import { generarJWT } from "../middlewares/validar-jwt.js";
 
 const httpUsuario = {
   //Get all usuarios
@@ -56,6 +57,38 @@ const httpUsuario = {
     } catch (error) {
       res.status(500).json({ error });
       console.log(error)
+    }
+  },
+
+  login: async (req, res) => {
+    const { cedula, password } = req.body;
+
+    try {
+      const usuario = await Usuario.findOne({ cedula });
+      console.log("a", usuario);
+
+      if (!usuario) {
+        return res.status(400).json({
+          error: "Identificación o Contraseña no son correctos",
+        });
+      }
+      if (usuario.estado == false) {
+        return res.status(400).json({
+          error: "Usuario Inactivo",
+        });
+      }
+      const validPassword = bcryptjs.compareSync(password, usuario.password);
+      if (!validPassword) {
+        return res.status(401).json({
+          error: "Identificación o Contraseña no son correctos",
+        });
+      }
+      const token = await generarJWT(usuario.id);
+      res.json({ usuario, token });
+    } catch (error) {
+      return res.status(500).json({
+        error: "Hable con el WebMaster",
+      });
     }
   },
 

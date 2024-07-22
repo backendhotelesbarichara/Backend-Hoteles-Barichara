@@ -8,6 +8,8 @@ const router = new Router();
 //Get
 router.get("/all", httpHotel.getTodo);
 
+router.get("/buscarHotel/:idUsuario", httpHotel.getPorUsuario);
+
 //Post
 router.post(
   "/registro",

@@ -29,12 +29,13 @@ const httpCliente = {
   //Post registro cliente
   crearCliente: async (req, res) => {
     try {
-      const { nombre, apellido, cedula, telefono } = req.body;
+      const { nombre, apellido, cedula, correo, telefono } = req.body;
 
       const cliente = new Cliente({
         nombre,
         apellido,
         cedula,
+        correo,
         telefono,
       });
 
@@ -58,6 +59,7 @@ const httpCliente = {
           nombre,
           apellido,
           cedula,
+          correo,
           telefono,
         },
         { new: true }

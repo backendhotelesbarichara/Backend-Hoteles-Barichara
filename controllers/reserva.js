@@ -102,9 +102,16 @@ const httpReserva = {
         idCliente,
       } = req.body;
 
+      const fechaEntrada = dayjs(fecha_entrada);
+      const fechaSalida = dayjs(fecha_salida);
+
+      // Formatear fechas
+      const fechaEntradaFormateada = fechaEntrada.format("YYYY-MM-DD");
+      const fechaSalidaFormateada = fechaSalida.format("YYYY-MM-DD");
+
       const reserva = new Reserva({
-        fecha_entrada,
-        fecha_salida,
+        fecha_entrada: fechaEntradaFormateada,
+        fecha_salida: fechaSalidaFormateada,
         cantidad_noches,
         cantidad_adulto,
         cantidad_nino,

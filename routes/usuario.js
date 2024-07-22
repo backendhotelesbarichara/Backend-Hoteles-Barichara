@@ -27,6 +27,15 @@ router.post(
   httpUsuario.crearUsuario
 );
 
+router.post(
+  "/login",
+  [
+    check("cedula", "Digite su identificacion").not().isEmpty(),
+    check("password", "Digite la contraseña").not().isEmpty(),
+  ],
+  httpUsuario.login
+);
+
 //Put
 router.put(
   "/editar/:id",
