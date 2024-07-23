@@ -18,7 +18,7 @@ router.get("/:id",
   httpPiso.getById
 );
 
-router.get('/buscarHotel/:idHotel', httpPiso.getPorHotel);
+router.get('/buscarPisoPorHotel/:idHotel', httpPiso.getPorHotel);
 
 //Post
 router.post(
