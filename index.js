@@ -34,6 +34,5 @@ mongoose.connect(`${process.env.mongoDB}`)
 
 server.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`);
-  console.log("hola soy mongo", process.env.mongoDB);
 });
  
