@@ -1,5 +1,5 @@
-import habitacion from "../models/habitacion.js";
 import Habitacion from "../models/habitacion.js";
+import Piso from "../models/piso.js"
 
 const httpHabitacion = {
   //Get
@@ -38,6 +38,16 @@ const httpHabitacion = {
     }
   },
 
+  getHabitacionesByHotel: async (req, res) => {
+    const { idHotel } = req.params;
+    try {
+      const habitaciones = await Habitacion.find({ idPiso: { $in: await Piso.find({ idHotel: idHotel }, { _id: 1 }) } });
+      res.json(habitaciones);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al obtener habitaciones' });
+    }
+  },
   //Post registro habitación
   crearHabitacion: async (req, res) => {
     try {

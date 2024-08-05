@@ -8,6 +8,15 @@ const router = new Router();
 //Get
 router.get("/all", httpHotel.getTodo);
 
+router.get(
+  "/buscarId/:id",
+  [
+    check("id", "Digite el id").not().isEmpty(),
+    check("id", "El id es invalido").isMongoId(),
+  ],
+  httpHotel.getPorId
+);
+
 router.get("/buscarHotel/:idUsuario", httpHotel.getPorUsuario);
 
 //Post

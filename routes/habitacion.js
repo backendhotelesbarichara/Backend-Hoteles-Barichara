@@ -10,6 +10,8 @@ router.get("/all", httpHabitacion.getTodo);
 
 router.get("/buscarPiso/:idPiso", httpHabitacion.getPorPiso);
 
+router.get('/habitaciones/:idHotel', httpHabitacion.getHabitacionesByHotel);
+
 //Post
 router.post(
   "/registro",

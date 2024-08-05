@@ -12,6 +12,17 @@ const httpHotel = {
     }
   },
 
+  getPorId: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const hotel = await Hotel.findById(id);
+      res.json(hotel);
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  },
+
+
   getPorUsuario: async (req, res) => {
     try {
       const { idUsuario } = req.params;
