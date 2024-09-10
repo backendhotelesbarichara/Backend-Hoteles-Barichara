@@ -40,11 +40,10 @@ const httpServicio = {
   //Post registro servicio
   crearServicio: async (req, res) => {
     try {
-      const { nombre, descripcion, idHotel } = req.body;
+      const { nombre, idHotel } = req.body;
 
       const servicio = new Servicio({
         nombre,
-        descripcion,
         idHotel,
       });
 
@@ -60,13 +59,12 @@ const httpServicio = {
   editarServicio: async (req, res) => {
     try {
       const { id } = req.params;
-      const { nombre, descripcion, idHotel } = req.body;
+      const { nombre, idHotel } = req.body;
 
       const servicio = await Servicio.findByIdAndUpdate(
         id,
         {
           nombre,
-          descripcion,
           idHotel,
         },
         { new: true }

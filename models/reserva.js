@@ -7,6 +7,7 @@ const reservaSchema = new mongoose.Schema({
   cantidad_adulto: { type: Number, required: true },
   cantidad_nino: { type: Number },
   costo_total: { type: Number, required: true },
+  mensaje: { type: String },
   idHabitacion: { type: mongoose.Schema.Types.ObjectId, ref: "Habitacion", required: true },
   idCliente: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente", required: true },
   aprobado: { type: Boolean, default: 0 },

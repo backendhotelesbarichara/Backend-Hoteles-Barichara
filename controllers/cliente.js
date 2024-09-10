@@ -27,10 +27,20 @@ const httpCliente = {
   },
 
   //Post registro cliente
+  // Post registro cliente
   crearCliente: async (req, res) => {
     try {
       const { nombre, apellido, cedula, correo, telefono } = req.body;
 
+      // Verificar si ya existe un cliente con la misma cédula
+      const clienteExistente = await Cliente.findOne({ cedula });
+
+      if (clienteExistente) {
+        // Si el cliente ya existe, devolver los datos del cliente
+        return res.status(200).json( clienteExistente);
+      }
+
+      // Si no existe, crear un nuevo cliente
       const cliente = new Cliente({
         nombre,
         apellido,

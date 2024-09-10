@@ -19,7 +19,6 @@ router.post(
   "/registro",
   [
     check("nombre", "Digite el nombre").not().isEmpty(),
-    check("descripcion", "Digite la descripción").not().isEmpty(),
     check("idHotel", "Seleccione un hotel").not().isEmpty(),
     check("idHotel", "Seleccione un hotel").isMongoId(),
     validarCampos,
@@ -32,7 +31,6 @@ router.put(
   "/editar/:id",
   [
     check("nombre", "Digite el nombre").not().isEmpty(),
-    check("descripcion", "Digite la descripción").not().isEmpty(),
     check("idHotel", "Seleccione un hotel").not().isEmpty(),
     check("idHotel", "Seleccione un hotel").isMongoId(),
     validarCampos,

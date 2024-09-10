@@ -1,5 +1,5 @@
 import Habitacion from "../models/habitacion.js";
-import Piso from "../models/piso.js"
+import Piso from "../models/piso.js";
 
 const httpHabitacion = {
   //Get
@@ -41,13 +41,57 @@ const httpHabitacion = {
   getHabitacionesByHotel: async (req, res) => {
     const { idHotel } = req.params;
     try {
-      const habitaciones = await Habitacion.find({ idPiso: { $in: await Piso.find({ idHotel: idHotel }, { _id: 1 }) } });
+      const habitaciones = await Habitacion.find({
+        idPiso: { $in: await Piso.find({ idHotel: idHotel }, { _id: 1 }) },
+      });
       res.json(habitaciones);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Error al obtener habitaciones' });
+      res.status(500).json({ message: "Error al obtener habitaciones" });
     }
   },
+
+  getHabitacionesByHotelYCantidad: async (req, res) => {
+    try {
+      const { idHotel, cantidad_personas } = req.query; // Obtener idHotel y cantidad_personas desde query params
+
+      // Verificar si el idHotel está presente
+      if (!idHotel) {
+        return res
+          .status(400)
+          .json({ message: "El id del hotel es requerido." });
+      }
+
+      // Obtener los pisos que pertenecen al hotel
+      const pisos = await Piso.find({ idHotel }, { _id: 1 }); // Solo obtener los IDs de los pisos
+      const pisoIds = pisos.map((piso) => piso._id); // Crear un array con los IDs de los pisos
+
+      // Construir el filtro para habitaciones
+      let query = {
+        idPiso: { $in: pisoIds }, // Filtrar habitaciones que pertenezcan a esos pisos
+      };
+
+      // Agregar filtro por cantidad mínima de personas si está presente
+      if (cantidad_personas) {
+        query.cantidad_personas = { $gte: Number(cantidad_personas) }; // Filtro por cantidad mínima de personas
+      }
+
+      // Buscar las habitaciones que cumplen con los filtros
+      const habitaciones = await Habitacion.find(query)
+        .populate("idPiso")
+        .exec();
+
+
+      // Devolver las habitaciones encontradas
+      res.status(200).json(habitaciones);
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ message: "Error al obtener habitaciones filtradas.", error });
+    }
+  },
+
   //Post registro habitación
   crearHabitacion: async (req, res) => {
     try {
