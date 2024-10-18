@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const hotelSchema = new mongoose.Schema({
   nombre: { type: String, require: true },
   descripcion: { type: String, require: true },
-  imagen: { url: { type: String }, publicId: { type: String } },
   logo: { url: { type: String }, publicId: { type: String } },
   fotos: [{ url: { type: String }, publicId: { type: String } }],
   direccion: { type: String, require: true, unique: true },

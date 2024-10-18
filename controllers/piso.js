@@ -76,7 +76,7 @@ const httpPiso = {
             idHotel,
         },
         { new: true }
-      );
+      ).populate("idHotel");
 
       res.json(piso);
     } catch (error) {

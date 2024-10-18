@@ -8,7 +8,6 @@ const httpReserva = {
     try {
       const reservas = await Reserva.find()
         .populate("idHabitacion")
-        .populate("idCliente");
       res.json(reservas);
     } catch (error) {
       res.status(500).json({ error });
@@ -27,8 +26,7 @@ const httpReserva = {
             model: "Piso",
             match: { idHotel: HotelId },
           },
-        })
-        .populate("idCliente");
+        });
       res.json(reservas);
     } catch (error) {
       res.status(500).json({ error });
@@ -76,8 +74,7 @@ const httpReserva = {
     try {
       const { id } = req.params;
       const reserva = await Reserva.findById(id)
-        .populate("idHabitacion")
-        .populate("idCliente");
+        .populate("idHabitacion");
       if (!reserva) {
         res.status(404).json({ message: "Reserva no encontrada" });
       } else {
@@ -104,7 +101,6 @@ const httpReserva = {
         costo_total,
         mensaje,
         idHabitacion,
-        idCliente,
       } = req.body;
 
       const fechaEntrada = dayjs(fecha_entrada);
@@ -127,7 +123,6 @@ const httpReserva = {
         mensaje,
         costo_total,
         idHabitacion,
-        idCliente,
       });
 
       await reserva.save();
@@ -158,7 +153,6 @@ const httpReserva = {
         costo_total,
         mensaje,
         idHabitacion,
-        idCliente,
       } = req.body;
 
       const reserva = await Reserva.findByIdAndUpdate(
@@ -176,10 +170,10 @@ const httpReserva = {
           costo_total,
           mensaje,
           idHabitacion,
-          idCliente,
         },
         { new: true }
-      );
+      )
+        .populate("idHabitacion");
 
       res.json(reserva);
     } catch (error) {

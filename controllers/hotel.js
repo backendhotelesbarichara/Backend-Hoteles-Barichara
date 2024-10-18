@@ -5,7 +5,7 @@ const httpHotel = {
   //Get
   getTodo: async (req, res) => {
     try {
-      const hotel = await Hotel.find();
+      const hotel = await Hotel.find().populate("idUsuario");
       res.json(hotel);
     } catch (error) {
       res.status(500).json({ error });
@@ -15,7 +15,7 @@ const httpHotel = {
   getPorId: async (req, res) => {
     try {
       const { id } = req.params;
-      const hotel = await Hotel.findById(id);
+      const hotel = await Hotel.findById(id).populate("idUsuario");
       res.json(hotel);
     } catch (error) {
       res.status(400).json({ error });
@@ -40,7 +40,7 @@ const httpHotel = {
       const {
         nombre,
         descripcion,
-        imagen,
+        fotos,
         logo,
         correo,
         direccion,
@@ -53,9 +53,9 @@ const httpHotel = {
       const hotel = new Hotel({
         nombre,
         descripcion,
-        correo,
-        imagen,
+        fotos,
         logo,
+        correo,
         direccion,
         telefono,
         servicio,
@@ -87,7 +87,6 @@ const httpHotel = {
       const {
         nombre,
         descripcion,
-        imagen,
         logo,
         fotos,
         correo,
@@ -103,7 +102,6 @@ const httpHotel = {
         {
           nombre,
           descripcion,
-          imagen,
           logo,
           fotos,
           direccion,
@@ -114,7 +112,7 @@ const httpHotel = {
           idUsuario,
         },
         { new: true }
-      );
+      ).populate("idUsuario");
 
       res.json(hotel);
     } catch (error) {

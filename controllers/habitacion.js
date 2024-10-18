@@ -99,7 +99,7 @@ const httpHabitacion = {
         numero_habitacion,
         descripcion,
         tipo_habitacion,
-        imagen_principal,
+        imagenes,
         cantidad_personas,
         servicio,
         precio_noche,
@@ -110,7 +110,7 @@ const httpHabitacion = {
         numero_habitacion,
         descripcion,
         tipo_habitacion,
-        imagen_principal,
+        imagenes,
         cantidad_personas,
         servicio,
         precio_noche,
@@ -134,7 +134,6 @@ const httpHabitacion = {
         descripcion,
         tipo_habitacion,
         cantidad_personas,
-        imagen_principal,
         imagenes,
         servicio,
         precio_noche,
@@ -149,7 +148,6 @@ const httpHabitacion = {
           descripcion,
           tipo_habitacion,
           cantidad_personas,
-          imagen_principal,
           imagenes,
           servicio,
           precio_noche,
@@ -157,7 +155,7 @@ const httpHabitacion = {
           disponible,
         },
         { new: true }
-      );
+      ).populate("idPiso");
 
       res.json(habitacion);
     } catch (error) {

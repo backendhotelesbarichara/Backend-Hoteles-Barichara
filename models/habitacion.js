@@ -5,7 +5,6 @@ const habitacionSchema = new mongoose.Schema({
   descripcion: { type: String, require: true },
   tipo_habitacion: [{ type: String }],
   cantidad_personas: { type: Number, required: true },
-  imagen_principal: { url: { type: String }, publicId: { type: String } },
   imagenes: [{ url: { type: String }, publicId: { type: String } }],
   servicio: [{ type: String, require: true }],
   precio_noche: { type: Number, required: true },
