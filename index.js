@@ -5,11 +5,10 @@ import mongoose from "mongoose";
 import cors from 'cors';
 import Hotel from "./routes/hotel.js";
 import Piso from "./routes/piso.js";
-import Cliente from "./routes/cliente.js";
 import Habitacion from "./routes/habitacion.js";
 import Reserva from "./routes/reserva.js";
 import Usuario from "./routes/usuario.js";
-import Servicio from "./routes/servicio.js";
+
 
 
 const app = express();
@@ -22,11 +21,8 @@ app.use(express.static('public'))
 app.use("/api/hotel", Hotel);
 app.use("/api/piso", Piso);
 app.use("/api/habitacion", Habitacion);
-app.use("/api/cliente", Cliente);
 app.use("/api/reserva", Reserva);
 app.use("/api/usuario", Usuario);
-app.use("/api/servicio", Servicio);
-
 const server = http.createServer(app);
 
 mongoose.connect(`${process.env.mongoDB}`)

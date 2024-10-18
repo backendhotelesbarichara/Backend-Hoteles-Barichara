@@ -19,13 +19,17 @@ router.get('/habitaciones-disponibles/:fecha_entrada/:fecha_salida', httpReserva
 router.post(
   "/registro",
   [
+    check("nombre_cliente", "Digite su nombre, por favor").not().isEmpty(),
+    check("cedula_cliente", "Digite su número de identificación, por favor").not().isEmpty(),
+    check("telefono_cliente", "Digite su número telefónico, por favor").not().isEmpty(),
+    check("correo_cliente", "Digite su correo, por favor").not().isEmpty(),
+    check("fecha_entrada", "Digite la fecha de entrada").not().isEmpty(),
     check("fecha_entrada", "Digite la fecha de entrada").not().isEmpty(),
     check("fecha_salida", "Digite la fecha de salida").not().isEmpty(),
     check("cantidad_noches", "Digite la cantidad de noches").not().isEmpty(),
     check("costo_total", "Digite el costo total").not().isEmpty(),
     check("cantidad_adulto", "Digite cantidad adulto").not().isEmpty(),
     check("idHabitacion", "Digite el ID de la habitación").isMongoId(),
-    check("idCliente", "Digite el ID del huesped").isMongoId(),
     validarCampos,
   ],
   httpReserva.crearReserva
@@ -35,13 +39,16 @@ router.post(
 router.put(
   "/editar/:id",
   [
+    check("nombre_cliente", "Digite su nombre, por favor").not().isEmpty(),
+    check("cedula_cliente", "Digite su número de identificación, por favor").not().isEmpty(),
+    check("telefono_cliente", "Digite su número telefónico, por favor").not().isEmpty(),
+    check("correo_cliente", "Digite su correo, por favor").not().isEmpty(),
     check("fecha_entrada", "Digite la fecha de entrada").not().isEmpty(),
     check("fecha_salida", "Digite la fecha de salida").not().isEmpty(),
     check("cantidad_noches", "Digite la cantidad de noches").not().isEmpty(),
     check("costo_total", "Digite el costo total").not().isEmpty(),
     check("cantidad_adulto", "Digite cantidad adulto").not().isEmpty(),
     check("idHabitacion", "Digite el ID de la habitación").isMongoId(),
-    check("idCliente", "Digite el ID del huesped").isMongoId(),
     validarCampos,
   ],
   httpReserva.editarReserva

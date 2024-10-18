@@ -45,6 +45,7 @@ const httpHotel = {
         correo,
         direccion,
         telefono,
+        servicio,
         pisos,
         idUsuario,
       } = req.body;
@@ -57,6 +58,7 @@ const httpHotel = {
         logo,
         direccion,
         telefono,
+        servicio,
         pisos,
         idUsuario,
       });
@@ -91,6 +93,7 @@ const httpHotel = {
         correo,
         direccion,
         telefono,
+        servicio,
         pisos,
         idUsuario,
       } = req.body;
@@ -106,6 +109,7 @@ const httpHotel = {
           direccion,
           correo,
           telefono,
+          servicio,
           pisos,
           idUsuario,
         },

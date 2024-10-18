@@ -92,6 +92,10 @@ const httpReserva = {
   crearReserva: async (req, res) => {
     try {
       const {
+        nombre_cliente,
+        cedula_cliente,
+        telefono_cliente,
+        correo_cliente,
         fecha_entrada,
         fecha_salida,
         cantidad_noches,
@@ -111,6 +115,10 @@ const httpReserva = {
       const fechaSalidaFormateada = fechaSalida.format("YYYY-MM-DD");
 
       const reserva = new Reserva({
+        nombre_cliente,
+        cedula_cliente,
+        telefono_cliente,
+        correo_cliente,
         fecha_entrada: fechaEntradaFormateada,
         fecha_salida: fechaSalidaFormateada,
         cantidad_noches,
@@ -138,6 +146,10 @@ const httpReserva = {
     try {
       const { id } = req.params;
       const {
+        nombre_cliente,
+        cedula_cliente,
+        telefono_cliente,
+        correo_cliente,
         fecha_entrada,
         fecha_salida,
         cantidad_noches,
@@ -152,6 +164,10 @@ const httpReserva = {
       const reserva = await Reserva.findByIdAndUpdate(
         id,
         {
+          nombre_cliente,
+          cedula_cliente,
+          telefono_cliente,
+          correo_cliente,
           fecha_entrada,
           fecha_salida,
           cantidad_noches,
