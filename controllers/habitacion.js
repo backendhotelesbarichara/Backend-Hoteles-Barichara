@@ -16,7 +16,13 @@ const httpHabitacion = {
   getById: async (req, res) => {
     try {
       const { id } = req.params;
-      const habitacion = await Habitacion.findById(id).populate("idPiso");
+      const habitacion = await Habitacion.findById(id).populate({
+        path: 'idPiso',
+        populate: {
+          path: 'idHotel',
+          model: 'Hotel'
+        }
+      });
       if (!habitacion) {
         res.status(404).json({ message: "Habitación no encontrada" });
       } else {
