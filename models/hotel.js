@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const hotelSchema = new mongoose.Schema({
-  nombre: { type: String, require: true },
-  descripcion: { type: String, require: true },
+  nombre: { type: String, required: true },
+  descripcion: { type: String, required: true },
   logo: { url: { type: String }, publicId: { type: String } },
   fotos: [{ url: { type: String }, publicId: { type: String } }],
-  direccion: { type: String, require: true, unique: true },
+  direccion: { type: String, required: true, unique: true },
   correo: { type: String, required: true, unique: true },
   telefono: { type: String, required: true, unique: true },
   servicio: [{ descrip: { type: String, _id: false } }],

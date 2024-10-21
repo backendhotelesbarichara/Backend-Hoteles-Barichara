@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const reservaSchema = new mongoose.Schema({
-  nombre_cliente: { type: String, require: true },
-  cedula_cliente: { type: String, require: true },
-  telefono_cliente: { type: String, require: true },
-  correo_cliente: { type: String, require: true },
+  nombre_cliente: { type: String, required: true },
+  cedula_cliente: { type: String, required: true },
+  telefono_cliente: { type: String, required: true },
+  correo_cliente: { type: String, required: true },
   fecha_entrada: { type: Date, required: true },
   fecha_salida: { type: Date, required: true },
   cantidad_noches: { type: Number, required: true },
