@@ -36,7 +36,13 @@ const httpHabitacion = {
   getPorPiso: async (req, res) => {
     try {
       const { idPiso } = req.params;
-      const habitacion = await Habitacion.find({ idPiso }).populate("idPiso");
+      const habitacion = await Habitacion.find({ idPiso }).populate({
+        path: 'idPiso',
+        populate: {
+          path: 'idHotel',
+          model: 'Hotel'
+        }
+      });
       res.json(habitacion);
     } catch (error) {
       console.log(error);
