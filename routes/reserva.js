@@ -14,6 +14,7 @@ router.get("/buscarReservas/:idHotel", httpReserva.getReservasByHotelId);
 
 router.get('/habitaciones-disponibles/:fecha_entrada/:fecha_salida', httpReserva.getHabitacionesDisponibles);
 
+router.get("/buscarReservaByUser/:idUsuario", httpReserva.getReservasByUser);
 
 //Post
 router.post(

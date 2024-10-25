@@ -1,5 +1,8 @@
 import Reserva from "../models/reserva.js";
+import Hotel from "../models/hotel.js";
+import Piso from "../models/piso.js";
 import Habitacion from "../models/habitacion.js";
+import Usuario from "../models/usuario.js";
 import nodemailer from "nodemailer";
 import dayjs from "dayjs";
 
@@ -68,7 +71,6 @@ const httpReserva = {
     }
   },
 
-  //Get reserva by ID
   getById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -80,6 +82,51 @@ const httpReserva = {
       }
     } catch (error) {
       res.status(500).json({ error });
+    }
+  },
+
+  getReservasByUser: async (req, res) => {
+    try {
+      // Obtener ID del usuario desde los parámetros de la solicitud
+      const userId = req.params.idUsuario;
+
+      // Paso 1: Buscar los hoteles asociados al usuario
+      const hoteles = await Hotel.find({ idUsuario: userId });
+      if (!hoteles.length) {
+        return res.status(404).json({ message: "No se encontraron hoteles para el usuario." });
+      }
+
+      // Paso 2: Obtener los IDs de los hoteles
+      const hotelIds = hoteles.map(hotel => hotel._id);
+
+      // Paso 3: Buscar habitaciones asociadas a los pisos de los hoteles del usuario
+      const habitaciones = await Habitacion.find({
+        idPiso: {
+          $in: await Piso.find({ idHotel: { $in: hotelIds } }).distinct('_id')
+        }
+      });
+
+      // Paso 4: Obtener los IDs de las habitaciones
+      const habitacionIds = habitaciones.map(habitacion => habitacion._id);
+
+      // Paso 5: Buscar reservas asociadas a las habitaciones filtradas
+      const reservas = await Reserva.find({ idHabitacion: { $in: habitacionIds } })
+        .populate({
+          path: 'idHabitacion',
+          populate: {
+            path: 'idPiso',
+            populate: {
+              path: 'idHotel', // Para incluir el detalle del hotel
+              select: 'nombre'  // Opcional: seleccionar campos específicos del hotel
+            }
+          }
+        });
+
+      // Enviar la lista de reservas filtradas
+      res.json(reservas);
+    } catch (error) {
+      console.error("Error al obtener reservas por usuario:", error);
+      res.status(500).json({ error: "Error al obtener reservas" });
     }
   },
 
