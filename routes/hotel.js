@@ -41,14 +41,7 @@ router.post(
 router.put(
   "/editar/:id",
   [
-    check("nombre", "Digite el nombre").not().isEmpty(),
-    check("descripcion", "Digite la descripción").not().isEmpty(),
-    check("direccion", "Digite la direccion").not().isEmpty(),
-    check("correo", "Digite el correo").not().isEmpty(),
-    check("telefono", "Digite el telefono").not().isEmpty(),
-    check("servicio", "Digite por lo menos un servicio del hotel").not().isEmpty(),
-    check("pisos", "Digite la cantidad de pisos").not().isEmpty(),
-    check("idUsuario", "Digite el usuario").not().isEmpty(),
+
     validarCampos,
   ],
   httpHotel.editarHotel
