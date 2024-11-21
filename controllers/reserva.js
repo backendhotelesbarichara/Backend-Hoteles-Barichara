@@ -2,6 +2,7 @@ import Reserva from "../models/reserva.js";
 import Hotel from "../models/hotel.js";
 import Piso from "../models/piso.js";
 import Habitacion from "../models/habitacion.js";
+import Admin from "../models/usuario.js";
 import Usuario from "../models/usuario.js";
 import nodemailer from "nodemailer";
 import dayjs from "dayjs";
@@ -93,34 +94,37 @@ const httpReserva = {
       // Paso 1: Buscar los hoteles asociados al usuario
       const hoteles = await Hotel.find({ idUsuario: userId });
       if (!hoteles.length) {
-        return res.status(404).json({ message: "No se encontraron hoteles para el usuario." });
+        return res
+          .status(404)
+          .json({ message: "No se encontraron hoteles para el usuario." });
       }
 
       // Paso 2: Obtener los IDs de los hoteles
-      const hotelIds = hoteles.map(hotel => hotel._id);
+      const hotelIds = hoteles.map((hotel) => hotel._id);
 
       // Paso 3: Buscar habitaciones asociadas a los pisos de los hoteles del usuario
       const habitaciones = await Habitacion.find({
         idPiso: {
-          $in: await Piso.find({ idHotel: { $in: hotelIds } }).distinct('_id')
-        }
+          $in: await Piso.find({ idHotel: { $in: hotelIds } }).distinct("_id"),
+        },
       });
 
       // Paso 4: Obtener los IDs de las habitaciones
-      const habitacionIds = habitaciones.map(habitacion => habitacion._id);
+      const habitacionIds = habitaciones.map((habitacion) => habitacion._id);
 
       // Paso 5: Buscar reservas asociadas a las habitaciones filtradas
-      const reservas = await Reserva.find({ idHabitacion: { $in: habitacionIds } })
-        .populate({
-          path: 'idHabitacion',
+      const reservas = await Reserva.find({
+        idHabitacion: { $in: habitacionIds },
+      }).populate({
+        path: "idHabitacion",
+        populate: {
+          path: "idPiso",
           populate: {
-            path: 'idPiso',
-            populate: {
-              path: 'idHotel', // Para incluir el detalle del hotel
-              select: 'nombre'  // Opcional: seleccionar campos específicos del hotel
-            }
-          }
-        });
+            path: "idHotel", // Para incluir el detalle del hotel
+            select: "nombre", // Opcional: seleccionar campos específicos del hotel
+          },
+        },
+      });
 
       // Enviar la lista de reservas filtradas
       res.json(reservas);
@@ -196,9 +200,17 @@ const httpReserva = {
         });
       }
 
-      // Obtener correo del contacto del hotel (idUsuario)
-      const contactoHotel = habitacion.idPiso.idHotel.idUsuario;
-      const correoContactoHotel = contactoHotel.correo;
+      const admin = await Admin.findOne();
+
+      if (!admin) {
+        return res
+          .status(404)
+          .json({ error: "No se encontró el administrador" });
+      }
+
+      // Obtener correos
+      const contactoHotel = habitacion.idPiso.idHotel.correo;
+      const correoAdmin = admin.correo;
 
       // Configurar el transporte de nodemailer
       const transporter = nodemailer.createTransport({
@@ -213,22 +225,19 @@ const httpReserva = {
       const enviarCorreoCliente = {
         from: process.env.userEmail,
         to: correo_cliente,
-        subject: `Confirmación de reserva - ${habitacion.idPiso.idHotel.nombre}`,
+        subject: `Solicitud de reserva - ${habitacion.idPiso.idHotel.nombre}`,
         html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
             <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center;">
-            <h2 style="color: #E53935;">Confirmación de Reserva</h2>
-          <div style="position: relative;">
-            <div style="margin-left: 50px;">
-            <img src="${
-              habitacion.imagenes[0]?.url
-            }" alt="Imagen de la habitación" 
-             style="width: 150px; height: auto; border-radius: 8px; object-fit: cover;" />
-           </div>
-             </div>
-          </div>
+              <h2 style="color: #E53935;">Confirmación de Reserva</h2>
+              <div style="margin-left: 50px;">
+                <img src="${
+                  habitacion.imagenes[0]?.url
+                }" alt="Imagen de la habitación" 
+                  style="width: 150px; height: auto; border-radius: 8px; object-fit: cover;" />
+              </div>
+            </div>
             <p>Gracias por reservar en nuestro hotel, ${nombre_cliente}.</p>
-            <p>Detalles de tu reserva:</p>
             <ul>
               <li><strong>Fecha Entrada:</strong> ${fechaEntradaFormateada}</li>
               <li><strong>Fecha Salida:</strong> ${fechaSalidaFormateada}</li>
@@ -238,32 +247,28 @@ const httpReserva = {
               <li><strong>Mensaje:</strong> ${mensaje || "N/A"}</li>
               <li><strong>Costo Total:</strong> ${costo_total} COP</li>
             </ul>
-            <p>En breves nos contactaremos contigo.</p>
           </div>
-            </div>
         `,
       };
 
       // Correo al contacto del hotel
       const enviarCorreoContactoHotel = {
         from: process.env.userEmail,
-        to: correoContactoHotel,
+        to: contactoHotel,
         subject: "Nueva reserva confirmada",
         html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
             <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center;">
-            <h2 style="color: #E53935;">Nueva reserva confirmada para la ${
-              habitacion.tipo_habitacion[0]
-            }</h2>
-              <div style="position: relative;">
-                   <div style="margin-left: 50px;">
-                  <img src="${
-                    habitacion.imagenes[0]?.url
-                  }" alt="Imagen de la habitación" 
-                 style="width: 150px; height: auto; border-radius: 8px; object-fit: cover;" />
-                 </div>
+              <h2 style="color: #E53935;">Nueva reserva confirmada para la ${
+                habitacion.tipo_habitacion[0]
+              }</h2>
+              <div style="margin-left: 50px;">
+                <img src="${
+                  habitacion.imagenes[0]?.url
+                }" alt="Imagen de la habitación" 
+                  style="width: 150px; height: auto; border-radius: 8px; object-fit: cover;" />
               </div>
-                 </div>   
+            </div>
             <p>Detalles del cliente:</p>
             <ul>
               <li><strong>Nombre:</strong> ${nombre_cliente}</li>
@@ -275,14 +280,52 @@ const httpReserva = {
               <li><strong>Cantidad de Noches:</strong> ${cantidad_noches}</li>
               <li><strong>Adultos:</strong> ${cantidad_adulto}</li>
               <li><strong>Niños:</strong> ${cantidad_nino || "N/A"}</li>
-              <li><strong>Mensaje del cliente:</strong> ${mensaje || "N/A"}</li>
+              <li><strong>Mensaje:</strong> ${mensaje || "N/A"}</li>
               <li><strong>Costo Total:</strong> ${costo_total} COP</li>
               <li><strong>Número Habitación:</strong> ${
                 habitacion.numero_habitacion
               }</li>
             </ul>
           </div>
-            </div>
+        `,
+      };
+
+      // Correo al administrador
+      const enviarCorreoAdmin = {
+        from: process.env.userEmail,
+        to: correoAdmin,
+        subject: "Nueva solicitud de reserva",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
+            <h2 style="color: #E53935;">Nueva solicitud de reserva</h2>
+            <p>Un cliente ha solicitado una reserva. Detalles del cliente y de la reserva:</p>
+            <ul>
+              <li><strong>Nombre Cliente:</strong> ${nombre_cliente}</li>
+              <li><strong>Cédula Cliente:</strong> ${cedula_cliente}</li>
+              <li><strong>Teléfono Cliente:</strong> ${telefono_cliente}</li>
+              <li><strong>Correo Cliente:</strong> ${correo_cliente}</li>
+              <li><strong>Fecha Entrada:</strong> ${fechaEntradaFormateada}</li>
+              <li><strong>Fecha Salida:</strong> ${fechaSalidaFormateada}</li>
+              <li><strong>Cantidad de Noches:</strong> ${cantidad_noches}</li>
+              <li><strong>Adultos:</strong> ${cantidad_adulto}</li>
+              <li><strong>Niños:</strong> ${cantidad_nino || "N/A"}</li>
+              <li><strong>Mensaje:</strong> ${mensaje || "N/A"}</li>
+              <li><strong>Costo Total:</strong> ${costo_total} COP</li>
+            </ul>
+            <p>Detalles del contacto del hotel:</p>
+            <ul>
+              <li><strong>Correo Contacto Hotel:</strong> ${contactoHotel}</li>
+              <li><strong>Nombre Hotel:</strong> ${
+                habitacion.idPiso.idHotel.nombre
+              }</li>
+              <li><strong>Tipo Habitación:</strong> ${
+                habitacion.tipo_habitacion[0]
+              }</li>
+              <li><strong>Número Habitación:</strong> ${
+                habitacion.numero_habitacion
+              }</li>
+            </ul>
+          </div>
         `,
       };
 
@@ -290,6 +333,7 @@ const httpReserva = {
       await Promise.all([
         transporter.sendMail(enviarCorreoCliente),
         transporter.sendMail(enviarCorreoContactoHotel),
+        transporter.sendMail(enviarCorreoAdmin),
       ]);
 
       // Devolver la reserva creada
