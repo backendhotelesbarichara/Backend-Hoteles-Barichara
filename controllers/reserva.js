@@ -11,7 +11,16 @@ const httpReserva = {
   //Get all reservas
   getTodo: async (req, res) => {
     try {
-      const reservas = await Reserva.find().populate("idHabitacion");
+      const reservas = await Reserva.find().populate({
+        path: "idHabitacion",
+        populate: {
+          path: "idPiso",
+          populate: {
+            path: "idHotel", // Para incluir el detalle del hotel
+            select: "nombre", // Opcional: seleccionar campos específicos del hotel
+          },
+        },
+      });
       res.json(reservas);
     } catch (error) {
       res.status(500).json({ error });
