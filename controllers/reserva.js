@@ -197,18 +197,6 @@ const httpReserva = {
         },
       });
 
-      if (
-        !habitacion ||
-        !habitacion.idPiso ||
-        !habitacion.idPiso.idHotel ||
-        !habitacion.idPiso.idHotel.idUsuario
-      ) {
-        return res.status(404).json({
-          error:
-            "No se encontró la habitación o los detalles del contacto del hotel",
-        });
-      }
-
       const admin = await Admin.findOne();
 
       if (!admin) {
